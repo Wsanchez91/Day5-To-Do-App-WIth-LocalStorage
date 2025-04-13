@@ -5,22 +5,38 @@ const filterAllBtn = document.querySelector("#filter-all");
 const filterActiveBtn = document.querySelector("#filter-active");
 const filterCompletedBtn = document.querySelector("#filter-completed");
 
+addBtn.addEventListener("click", () => {
+  const task = input.value.trim();
+  if (task !== "") {
+    addTask(task, false);
+    updateStorage();
+    input.value = "";
+  }
+});
+
 function addTask(text, completed) {
   const li = document.createElement("li");
   const completeBtn = document.createElement("button");
   const deleteBtn = document.createElement("button");
 
-  li.textContent = text;
+  const textSpan = document.createElement("span");
+  textSpan.textContent = text;
+
   completeBtn.textContent = "✔";
   deleteBtn.textContent = "🗑";
 
-  li.appendChild(completeBtn);
-  li.appendChild(deleteBtn);
-  taskList.appendChild(li);
-
+  li.style.display = "flex";
+  li.style.justifyContent = "space-between";
+  li.style.alignItems = "center";
+  
   if (completed) {
     li.classList.add("completed");
   }
+
+  li.appendChild(textSpan);
+  li.appendChild(completeBtn);
+  li.appendChild(deleteBtn);
+  taskList.appendChild(li);
 
   completeBtn.addEventListener("click", () => {
     li.classList.toggle("completed");
@@ -30,22 +46,7 @@ function addTask(text, completed) {
     li.remove();
     updateStorage();
   });
-
-  addBtn.addEventListener("click", () => {
-    const task = input.value.trim();
-    if (task !== "") {
-      addTask(task, false);
-      saveTask(task, false);
-      input.value = "";
-    }
-  });
 }
-
-const saveTask = (text, completed) => {
-  const tasks = getTasks();
-  tasks.push({ text, completed });
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-};
 
 const getTasks = () => JSON.parse(localStorage.getItem("tasks")) || [];
 
@@ -60,10 +61,11 @@ const updateStorage = () => {
   const tasks = [];
   taskList.querySelectorAll("li").forEach((li) => {
     tasks.push({
-      text: li.firstChild.textContent.trim(),
+      text: li.querySelector("span").textContent.trim(),
       completed: li.classList.contains("completed"),
     });
   });
+  console.log("Saving to localStorage:", tasks);
   localStorage.setItem("tasks", JSON.stringify(tasks));
 };
 
