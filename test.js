@@ -4,10 +4,6 @@ const taskList = document.querySelector("#task-list");
 const filterAllBtn = document.querySelector("#filter-all");
 const filterActiveBtn = document.querySelector("#filter-active");
 const filterCompletedBtn = document.querySelector("#filter-completed");
-const li = document.createElement("li");
-const completeBtn = document.createElement("button");
-const deleteBtn = document.createElement("button");
-const textSpan = document.createElement("span");
 
 addBtn.addEventListener("click", () => {
   const taskText = input.value.trim();
@@ -20,25 +16,29 @@ addBtn.addEventListener("click", () => {
 });
 
 const loadTasks = () => {
-  const stored = JSON.parse(localStorage.getItem("myTasks"));
+  const stored = JSON.parse(localStorage.getItem("myTasks")) || [];
   stored.forEach((text) => {
-    addNewTask(text);
+    addNewTask(text.task);
   });
 };
 
-const updateStorage = ()=>{
+const updateStorage = () => {
   const tasks = [];
-  taskList.querySelectorAll("li").forEach((li)=>{
+  taskList.querySelectorAll("li").forEach((li) => {
     tasks.push({
       task: li.querySelector("span").textContent.trim(),
       complete: li.classList.contains("completed"),
     });
-    alert("Saved to localStorage", tasks);
+    console.log("Saved to localStorage", tasks);
     localStorage.setItem("tasks", JSON.stringify(tasks));
-  })
-}
+  });
+};
 
 const addNewTask = (text, status) => {
+  const li = document.createElement("li");
+  const completeBtn = document.createElement("button");
+  const deleteBtn = document.createElement("button");
+  const textSpan = document.createElement("span");
   const stored = JSON.parse(localStorage.getItem("tasks")) || [];
   const addTask = [
     {
@@ -47,12 +47,16 @@ const addNewTask = (text, status) => {
     },
   ];
 
-  li.style.display = "flex";
-  li.style.justifyContent = "space-between";
-  li.style.alignItems = "center";
+  // li.style.display = "flex";
+  // li.style.justifyContent = "space-between";
+  // li.style.alignItems = "center";
 
   textSpan.textContent = text;
+  completeBtn.textContent = "✔";
+  deleteBtn.textContent = "🗑";
   li.appendChild(textSpan);
+  li.appendChild(completeBtn);
+  li.appendChild(deleteBtn);
   taskList.appendChild(li);
 
   stored.push(addTask);
@@ -60,3 +64,6 @@ const addNewTask = (text, status) => {
 
   input.value = "";
 };
+
+window.addEventListener("DOMContentLoaded", loadTasks);
+
