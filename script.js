@@ -5,11 +5,11 @@ const filterAllBtn = document.querySelector("#filter-all");
 const filterActiveBtn = document.querySelector("#filter-active");
 const filterCompletedBtn = document.querySelector("#filter-completed");
 
-addBtn.addEventListener("click", () => {
+addBtn.addEventListener("click", (e) => {
+  e.preventDefault();
   const task = input.value.trim();
   if (task !== "") {
     addTask(task, false);
-    // loadTasks()
     updateStorage();
     input.value = "";
   }
@@ -20,18 +20,11 @@ function addTask(text, completed) {
   const completeBtn = document.createElement("button");
   const deleteBtn = document.createElement("button");
   const textSpan = document.createElement("span");
-  // getTasks();
-  // getTasks().push(li);
-  // localStorage.setItem("tasks", JSON.stringify(li));
   textSpan.textContent = text;
 
   completeBtn.textContent = "✔";
   deleteBtn.textContent = "🗑";
 
-  li.style.display = "flex";
-  li.style.justifyContent = "space-between";
-  li.style.alignItems = "center";
-  
   if (completed) {
     li.classList.add("completed");
   }
@@ -53,7 +46,7 @@ function addTask(text, completed) {
 
 const getTasks = () => JSON.parse(localStorage.getItem("tasks")) || [];
 
-window.addEventListener("DOMContentLoaded", loadTasks);
+
 
 const loadTasks = () => {
   const tasks = getTasks();
@@ -89,3 +82,5 @@ filterCompletedBtn.addEventListener("click", () => {
     li.style.display = li.classList.contains("completed") ? "flex" : "none";
   });
 });
+
+window.addEventListener("DOMContentLoaded", loadTasks);

@@ -4,66 +4,26 @@ const taskList = document.querySelector("#task-list");
 const filterAllBtn = document.querySelector("#filter-all");
 const filterActiveBtn = document.querySelector("#filter-active");
 const filterCompletedBtn = document.querySelector("#filter-completed");
-
-addBtn.addEventListener("click", () => {
-  const taskText = input.value.trim();
-  if (taskText) {
-    addNewTask(taskText, false);
-    loadTasks();
-    updateStorage();
-    input.value = "";
-  }
-});
-
-const loadTasks = () => {
-  const stored = JSON.parse(localStorage.getItem("myTasks")) || [];
-  stored.forEach((text) => {
-    addNewTask(text.task);
-  });
-};
+const completeBtn = document.createElement("button");
+const deleteBtn = document.createElement("button");
+const taskData = JSON.parse(localStorage.getItem("data")) || [];
+let currentTask = {};
 
 const updateStorage = () => {
-  const tasks = [];
-  taskList.querySelectorAll("li").forEach((li) => {
-    tasks.push({
-      task: li.querySelector("span").textContent.trim(),
-      complete: li.classList.contains("completed"),
-    });
-    console.log("Saved to localStorage", tasks);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  });
-};
-
-const addNewTask = (text, status) => {
-  const li = document.createElement("li");
-  const completeBtn = document.createElement("button");
-  const deleteBtn = document.createElement("button");
-  const textSpan = document.createElement("span");
-  const stored = JSON.parse(localStorage.getItem("tasks")) || [];
-  const addTask = [
-    {
-      task: text,
-      completed: status,
-    },
-  ];
-
-  // li.style.display = "flex";
-  // li.style.justifyContent = "space-between";
-  // li.style.alignItems = "center";
-
-  textSpan.textContent = text;
+  taskList.innerHTML = "";
   completeBtn.textContent = "✔";
   deleteBtn.textContent = "🗑";
-  li.appendChild(textSpan);
-  li.appendChild(completeBtn);
-  li.appendChild(deleteBtn);
-  taskList.appendChild(li);
 
-  stored.push(addTask);
-  localStorage.setItem("tasks", JSON.stringify(stored));
-
-  input.value = "";
+  taskData.forEach(({data}) => {
+    taskList.innerHTML += `
+    <li>${data}<span>${completeBtn}${deleteBtn}</li>
+    `;
+  });
+  localStorage.setItem("data", JSON.stringify(data));
 };
 
-window.addEventListener("DOMContentLoaded", loadTasks);
+addBtn.addEventListener("click", (e)=>{
+  e.preventDefault();
 
+  updateStorage()
+})
