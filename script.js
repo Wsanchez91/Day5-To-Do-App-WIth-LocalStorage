@@ -9,6 +9,7 @@ addBtn.addEventListener("click", () => {
   const task = input.value.trim();
   if (task !== "") {
     addTask(task, false);
+    // loadTasks()
     updateStorage();
     input.value = "";
   }
@@ -18,8 +19,10 @@ function addTask(text, completed) {
   const li = document.createElement("li");
   const completeBtn = document.createElement("button");
   const deleteBtn = document.createElement("button");
-
   const textSpan = document.createElement("span");
+  // getTasks();
+  // getTasks().push(li);
+  // localStorage.setItem("tasks", JSON.stringify(li));
   textSpan.textContent = text;
 
   completeBtn.textContent = "✔";
